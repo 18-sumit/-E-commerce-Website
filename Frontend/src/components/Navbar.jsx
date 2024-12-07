@@ -1,14 +1,18 @@
-import { useState } from "react";
+/* eslint-disable no-unused-vars */
+import { useContext, useState } from "react";
 import { assets } from "../assets/assets.js";
 import { Link, NavLink } from "react-router-dom";
+import { ShopContext } from "../context/ShopContext.jsx";
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
+
+  const { setShowSearch } = useContext(ShopContext);
 
   return (
     // Logo section
     <div className="flex items-center justify-between py-5 font-medium">
       <Link to="/">
-        <img src={assets.logo} className="w-36" alt="" />
+        <img  src={assets.logo} className="w-36" alt="" />
       </Link>
 
       <ul className="hidden sm:flex gap-5 text-sm text-gray-700">
@@ -31,7 +35,7 @@ const Navbar = () => {
       </ul>
       {/* Right corner side of navbar */}
       <div className="flex items-center gap-6">
-        <img src={assets.search_icon} className="w-5 cursor-pointer" alt="" />
+        <img onClick={() => setShowSearch(true)} src={assets.search_icon} className="w-5 cursor-pointer" alt="" />
 
         <div className="group relative">
           <img
