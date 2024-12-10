@@ -6,13 +6,13 @@ import { ShopContext } from "../context/ShopContext.jsx";
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
 
-  const { setShowSearch , getCartCount } = useContext(ShopContext);
+  const { setShowSearch, getCartCount } = useContext(ShopContext);
 
   return (
     // Logo section
     <div className="flex items-center justify-between py-5 font-medium">
       <Link to="/">
-        <img  src={assets.logo} className="w-36" alt="" />
+        <img src={assets.logo} className="w-36" alt="" />
       </Link>
 
       <ul className="hidden sm:flex gap-5 text-sm text-gray-700">
@@ -38,11 +38,14 @@ const Navbar = () => {
         <img onClick={() => setShowSearch(true)} src={assets.search_icon} className="w-5 cursor-pointer" alt="" />
 
         <div className="group relative">
-          <img
-            className="w-5 cursor-pointer"
-            src={assets.profile_icon}
-            alt=""
-          />
+          <Link to="/login">
+            <img
+              className="w-5 cursor-pointer"
+              src={assets.profile_icon}
+              alt=""
+            />
+          </Link>
+
           <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
             <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
               <p className="cursor-pointer hover:text-black">My Profile</p>
