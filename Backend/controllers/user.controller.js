@@ -183,7 +183,37 @@ const loginUser = async (req, res) => {
 // //Route for admin login
 
 const adminLogin = async (req, res) => {
+    try {
+        const { email, password } = req.body
+        if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
 
+            const token = jwt.sign(
+                { email: process.env.ADMIN_EMAIL, isAdmin: true },  // Payload with email and isAdmin flag
+                process.env.JWT_SECRET,                             // Secret key for signing
+                { expiresIn: '1h' }                                 // Token expiration time
+            );
+
+
+            // Send the token back as part of the response
+            res.json({
+                success: true,
+                message: "Admin login successful",
+                token
+            });
+
+        } else {
+            res.json({
+                success: false,
+                message: "Invalid Credentials",
+            })
+        }
+    } catch (error) {
+        console.error(error);
+        return res.json({
+            success: false,
+            message: error.message || "Something went wrong during AdminLogin"
+        });
+    }
 }
 
 export {
