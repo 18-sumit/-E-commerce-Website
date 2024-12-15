@@ -21,7 +21,7 @@ uploadOnCloudinary();
 
 // middleware
 
-app.use(express.json());
+app.use(express.json()); // For parsing application/json
 app.use(cors())
 
 // api endpoints:
