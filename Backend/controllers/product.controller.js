@@ -1,4 +1,5 @@
 import { v2 as cloudinary } from "cloudinary"
+import { Product } from "../models/product.models.js"
 
 
 // function for adding products:
@@ -11,21 +12,88 @@ const addProduct = async (req, res) => {
         const image3 = req.files.image3 && req.files.image3[0];
         const image4 = req.files.image4 && req.files.image4[0];
 
-        const images = [image1, image2, image3, image4].filter((item) => item !== undefined)
+        // console.log(req.body); // Logs all the fields from the body
+        // console.log(req.files); // Logs the file data to check if they were uploaded correctly
 
-
-        console.log(name, description, price, category, subCategory, sizes, bestSeller);
+        // console.log(name, description, price, category, subCategory, sizes, bestSeller);
         // console.log(image1, image2, image3, image4);
-        console.log(images);
-        
-        return res.json({})
+
+        const images = [image1, image2, image3, image4].filter((item) => item !== undefined)
+        // console.log(images);
+
+        // Check if at least one image is uploaded
+        if (images.length === 0) {
+            return res.json({
+                success: false,
+                message: "At least one image is required"
+            })
+        };
+
+        // Check if images are valid
+        // images.forEach((item) => {
+        //     if (!item.mimetype.startWith("/image/")) {
+        //         return res.json({
+        //             success: false,
+        //             message: "Only Images are allowed"
+        //         })
+        //     }
+        // });
+
+
+        let imagesUrl = await Promise.all(
+            images.map(async (item) => {
+                try {
+                    let result = await cloudinary.uploader.upload(item.path, { resource_type: 'image' });
+                    return result.secure_url;  // return the URL of the uploaded image
+                } catch (uploadError) {
+                    console.log(uploadError);
+                    return null;  // Return null if upload fails
+                }
+            })
+        );
+
+        //filter out failed images (null values);
+        imagesUrl = imagesUrl.filter((url) => url !== null);
+        if (imagesUrl.length === 0) {
+            return res.json({
+                success: false,
+                message: "Failed to upload images"
+            })
+        }
+
+
+        // console.log(imagesUrl); // Log the uploaded image URLs
+
+        const productData = {
+            name,
+            description,
+            category,
+            price: Number(price), // as we'll get price in string format from form data.
+            subCategory,
+            bestSeller: bestSeller === 'true' ? true : false,
+            sizes: JSON.parse(sizes), // converting string to array using JSON.parse
+            image: imagesUrl,
+            date: Date.now()
+        }
+
+        console.log(productData)
+        const product = new Product(productData);
+        await product.save();
+
+
+        res.json({
+            success: true,
+            message: "Product Added"
+        })
 
 
 
     } catch (error) {
         console.log(error);
-
-        res.json({ success: false, message: error.message })
+        res.json({
+            success: false,
+            message: error.message
+        })
     }
 }
 
