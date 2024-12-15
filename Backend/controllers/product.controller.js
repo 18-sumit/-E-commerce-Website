@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from "cloudinary"
 import { Product } from "../models/product.models.js"
+import mongoose from "mongoose";
 
 
 // function for adding products:
@@ -99,16 +100,92 @@ const addProduct = async (req, res) => {
 
 // function for listing products
 const listProducts = async (req, res) => {
+    try {
+
+        const products = await Product.find({});
+
+        res.json({
+            success: true,
+            products  // return this array
+        })
+
+
+    } catch (error) {
+        console.log(error);
+        res.json({
+            success: false,
+            message: error.message
+        })
+    }
 }
 
 
 // function for removing products
 const removeProduct = async (req, res) => {
+    try {
+
+        // console.log(req.body.id)
+        // Check if ID is valid
+        // if (!mongoose.Types.ObjectId.isValid(req.body.id)) {
+        //     return res.json({
+        //         success: false,
+        //         message: "Invalid product ID"
+        //     });
+        // }
+
+
+        const product = await Product.findByIdAndDelete(req.body.id);
+
+        if (!product) {
+            return res.json({
+                success: false,
+                message: "Product not found"
+            })
+        };
+
+        res.json({
+            success: true,
+            message: "Product Removed"
+        })
+
+    } catch (error) {
+        console.log(error);
+        res.json({
+            success: false,
+            message: error.message
+        })
+    }
 
 }
 
 // function for single product info
 const singleProduct = async (req, res) => {
+    try {
+        const { productId } = req.body;
+
+        // console.log(productId)
+
+        const product = await Product.findById(productId);
+
+        if (!product) {
+            return res.json({
+                success: false,
+                message: "Product not found"
+            })
+        };
+
+        res.json({
+            success: true,
+            product
+
+        })
+    } catch (error) {
+        console.log(error);
+        res.json({
+            success: false,
+            message: error.message
+        })
+    }
 }
 
 
