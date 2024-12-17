@@ -1,14 +1,13 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
 import axios from 'axios'
 import { backendURL } from '../App'
 import { toast } from 'react-toastify'
-import { useNavigate } from 'react-router-dom';
 
 
 const Login = ({ setToken }) => {
 
-    const navigate = useNavigate();
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -23,9 +22,6 @@ const Login = ({ setToken }) => {
             if (response.data.success) {
                 setToken(response.data.token);
                 // toast.success('Login Successful!');
-                navigate('/add  '); // Redirect to a protected route after login
-
-
             } else {
                 toast.error(response.data.message || 'Invalid login credentials');
             }
