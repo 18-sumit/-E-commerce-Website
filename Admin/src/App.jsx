@@ -8,7 +8,7 @@ import ListProduct from "./pages/ListProduct"
 import Orders from "./pages/Orders"
 import Login from './components/login'
 import { ToastContainer } from 'react-toastify'
-export const backendURL = import.meta.env.VITE_BACKEND_URL
+import 'react-toastify/dist/ReactToastify.css'
 
 const App = () => {
 
@@ -18,7 +18,7 @@ const App = () => {
 
   // token is coming from backend response generated through JWT and here it is used for authentication
 
-  // as after relaoding page admin gets logged out automatically
+  // as after relaoding page admin gets logged out automatically , we'll make sure to store tokenn locally.
   useEffect(() => {
     localStorage.setItem('token', token)
   }, [token])
@@ -26,6 +26,7 @@ const App = () => {
 
   return (
     <div className='bg-gray-50 min-h-screen'>
+      
       <ToastContainer />
       {
         // settoken func.. is passed as a prop which is then destructured in Login.jsx for setting it's value.
