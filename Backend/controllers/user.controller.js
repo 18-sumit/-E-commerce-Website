@@ -190,7 +190,7 @@ const adminLogin = async (req, res) => {
             const token = jwt.sign(
                 { email: process.env.ADMIN_EMAIL, isAdmin: true },  // Payload with email and isAdmin flag
                 process.env.JWT_SECRET,                             // Secret key for signing
-                { expiresIn: '1h' }                                 // Token expiration time
+                { expiresIn: '24h' }                                 // Token expiration time
             );
 
 
