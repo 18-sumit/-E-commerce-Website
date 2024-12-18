@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
 import axios from 'axios'
-import { backendURL } from '../App'
+import { backendURL } from '../constants.js'
 import { toast } from 'react-toastify'
 
 
@@ -21,7 +21,7 @@ const Login = ({ setToken }) => {
 
             if (response.data.success) {
                 setToken(response.data.token);
-                // toast.success('Login Successful!');
+                toast.success('Login Successful!');
             } else {
                 toast.error(response.data.message || 'Invalid login credentials');
             }
