@@ -1,11 +1,67 @@
-import { useState } from "react"
+import { useContext, useEffect, useState } from "react"
+import { ShopContext } from "../context/ShopContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 function Login() {
-  const [currentState, setCurrentState] = useState('Sign Up');
+  const [currentState, setCurrentState] = useState('Login');
+  const { navigate, backendURL, setRefreshToken, refreshToken, accessToken, setAccessToken, } = useContext(ShopContext);
 
-  const onSubmitHandler = (event) => {
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+
+  const onSubmitHandler = async (event) => {
     event.preventDefault();
+    try {
+
+      // register user API
+      if (currentState === 'Sign Up') {
+
+        const response = await axios.post(`${backendURL}/api/user/register`, { name, email, password });
+        console.log(response.data);
+        if (response.data.success) {
+          const { accessToken } = response.data.accessToken;
+          const { refreshToken } = response.data.refreshToken;
+
+          setAccessToken(accessToken);
+          setRefreshToken(refreshToken);
+
+
+          localStorage.setItem('accessToken', accessToken);
+          localStorage.setItem('refreshToken', refreshToken);
+        } else {
+          toast.error(response.data.message)
+        }
+        // Login User API
+      } else {
+
+
+        const response = await axios.post(`${backendURL}/api/user/login`, { email, password });
+        console.log(response);
+
+        if (response.data.success) {
+          toast.success("Login Successful");
+          setRefreshToken(response.data.refreshToken);
+          setAccessToken(response.data.accessToken);
+        } else {
+          toast.error(response.data.message);
+        }
+
+      }
+
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message)
+    }
   };
+
+  useEffect(() => {
+    if (accessToken) {
+      navigate('/');
+
+    }
+  }, [accessToken])
 
 
   return (
@@ -15,10 +71,10 @@ function Login() {
         <hr className="border-none h-[1.5px] w-8 bg-gray-800" />
       </div>
 
-      {currentState === 'Login' ? '' : <input type="text" className="w-full px-3 py-2 border border-gray-800" placeholder="Name" required />
+      {currentState === 'Login' ? '' : <input onChange={(e) => setName(e.target.value)} value={name} type="text" className="w-full px-3 py-2 border border-gray-800" placeholder="Name" required />
       }
-      <input type="email" className="w-full px-3 py-2 border border-gray-800" placeholder="E-mail" required />
-      <input type="password" className="w-full px-3 py-2 border border-gray-800" placeholder="Password" required />
+      <input onChange={(e) => setEmail(e.target.value)} value={email} type="email" className="w-full px-3 py-2 border border-gray-800" placeholder="E-mail" required />
+      <input onChange={(e) => setPassword(e.target.value)} value={password} type="password" className="w-full px-3 py-2 border border-gray-800" placeholder="Password" required />
       <div className="w-full flex justify-between text-sm mt-[-8px]">
         <p className="cursor-pointer">Forgot Your Password?</p>
         {
