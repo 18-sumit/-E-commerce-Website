@@ -5,9 +5,11 @@ import jwt from 'jsonwebtoken'
 
 const authUser = async (req, res, next) => {
 
-    const { accessToken } = req.headers;
+    // console.log("Request headers:", req.headers);  // Log all headers to inspect
 
-    if (!accessToken) {
+    const { accesstoken } = req.headers;
+
+    if (!accesstoken) {
         return res.
             json({
                 success: false,
@@ -16,17 +18,21 @@ const authUser = async (req, res, next) => {
     }
 
     try {
+        // console.log("Token received in middleware:", accesstoken);  // Log token to check
+
         // Verify the JWT token
-        const decoded_accessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+        const decoded_accesstoken = jwt.verify(accesstoken, process.env.ACCESS_TOKEN_SECRET);
+        // console.log("Decoded access token:", decoded_accesstoken);
+
 
         // Add the user ID to the request body for further use
-        req.body.userId = decoded_accessToken.id
+        req.body.userId = decoded_accesstoken._id
 
         // Proceed to the next middleware/route handler
         next()
 
     } catch (error) {
-        console.log("Token verification error:", error);
+        // console.log("Token verification error:", error);
         let errorMessage = "Invalid token";
         let statusCode = 401
 
