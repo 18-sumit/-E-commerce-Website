@@ -38,7 +38,7 @@ function Login() {
 
 
         const response = await axios.post(`${backendURL}/api/user/login`, { email, password });
-        console.log(response);
+        // console.log(response);
 
         if (response.data.success) {
           toast.success("Login Successful");
