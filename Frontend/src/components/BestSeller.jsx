@@ -13,7 +13,7 @@ const BestSeller = () => {
         // in assets.js we have a field for each file as bestseller : true / false
         // hence we have to filter those products only
         const bestProduct = products.filter((item) => (item.bestseller)) // check assets file 
-        console.log(bestProduct)
+        // console.log(bestProduct)
         // after filteration we only want to show 5 Products.
         setBestSeller(bestProduct.slice(0, 5))
     }, [products])
