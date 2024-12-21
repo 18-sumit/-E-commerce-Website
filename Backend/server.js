@@ -6,6 +6,7 @@ import uploadOnCloudinary from "./config/cloudinary.js";
 import userRouter from "./routes/user.routes.js";
 import dotenv from "dotenv";
 import productRouter from "./routes/product.route.js";
+import cartRouter from "./routes/cart.route.js";
 
 dotenv.config({
     path: "./env"
@@ -27,6 +28,11 @@ app.use(cors())
 // api endpoints:
 app.use('/api/user', userRouter)
 app.use('/api/product', productRouter)
+
+//cart api endpoints:
+app.use('/api/cart' , cartRouter)
+
+
 app.get('/', (req, res) => {
     res.send("API WORKING")
 });
