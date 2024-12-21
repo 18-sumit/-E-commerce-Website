@@ -23,7 +23,7 @@ const ShopContextWrapper = (props) => {
     const navigate = useNavigate();
 
 
-    const addToCart = (itemId, size) => {
+    const addToCart = async (itemId, size) => {
         let cartData = structuredClone(cartItems);
 
         if (!size) {
@@ -43,6 +43,15 @@ const ShopContextWrapper = (props) => {
         }
 
         setCartItems(cartData);
+
+        if (accessToken) {
+            try {
+                await axios.post(`${backendURL}/api/cart/add`, { itemId, size }, { headers: { accessToken } })
+            } catch (error) {
+                console.log(error);
+                toast.error(error.message)
+            }
+        }
     }
 
 
@@ -64,34 +73,56 @@ const ShopContextWrapper = (props) => {
     };
 
     // to update cart  value after deleting the products from there
-    const updateQuantity = (itemId, size, quantity) => {
+    const updateQuantity = async (itemId, size, quantity) => {
         let cartData = structuredClone(cartItems);
 
         cartData[itemId][size] = quantity;
 
         setCartItems(cartData);
+
+        if (accessToken) {
+
+            try {
+
+                await axios.post(`${backendURL}/api/cart/update`, { itemId, size ,quantity }, { headers: { accessToken } })
+
+            } catch (error) {
+                console.log(error);
+                toast.error(error.message)
+
+            }
+        }
     };
 
 
     const getCartAmount = () => {
         let totalAmount = 0;
-        for (const items in cartItems) {
-            let itemInfo = products.find((product) => product._id === items)
-            for (const item in cartItems[items]) {
 
-                if (cartItems[items][item] > 0) {
-                    totalAmount += itemInfo.price * cartItems[items][item];
+        // Create a map for fast product lookup
+        const productMap = products.reduce((map, product) => {
+            map[product._id] = product;
+            return map;
+        }, {});
+
+        for (const items in cartItems) {
+            let itemInfo = productMap[items];  // Get product info by ID
+            if (itemInfo) {
+                for (const item in cartItems[items]) {
+                    if (cartItems[items][item] > 0) {
+                        totalAmount += itemInfo.price * cartItems[items][item];  // Add the cost
+                    }
                 }
             }
         }
         return totalAmount;
     }
 
+
     const getProductsData = async () => {
         try {
 
             const response = await axios.get(`${backendURL}/api/product/list`);
-            // console.log(response.data);
+            console.log(response.data);
             if (response.data.success) {
                 setProducts(response.data.products);
             } else {
@@ -105,6 +136,21 @@ const ShopContextWrapper = (props) => {
         }
     }
 
+    // to make sure cart data is saved even after reloading page
+    const getUserCart = async (accessToken) => {
+        try {
+
+            const response = await axios.post(`${backendURL}/api/cart/get`, {}, { headers: { accessToken } })
+            if (response.data.success) {
+                setCartItems(response.data.cartData)
+            }
+
+        } catch (error) {
+            console.log(error);
+            toast.error(error.message);
+        }
+    }
+
     useEffect(() => {
         getProductsData()
     }, [])
@@ -113,7 +159,15 @@ const ShopContextWrapper = (props) => {
         if (!accessToken && localStorage.getItem('accessToken')) {
             setAccessToken(localStorage.getItem('accessToken'))
         }
-    }, [])
+    }, [accessToken])
+
+    useEffect(() => {
+        // Only try to get the user's cart if the accessToken is available
+        if (accessToken) {
+            getUserCart(accessToken); // Pass accessToken to fetch cart data
+            updateQuantity()
+        }
+    }, [accessToken]);
 
     const value = {
         products,
