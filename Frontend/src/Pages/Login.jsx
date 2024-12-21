@@ -21,15 +21,15 @@ function Login() {
         const response = await axios.post(`${backendURL}/api/user/register`, { name, email, password });
         console.log(response.data);
         if (response.data.success) {
-          const { accessToken } = response.data.accessToken;
-          const { refreshToken } = response.data.refreshToken;
+          // const { accessToken } = response.data.accessToken;
+          // const { refreshToken } = response.data.refreshToken;
 
-          setAccessToken(accessToken);
-          setRefreshToken(refreshToken);
+          setAccessToken(response.data.accessToken);
+          setRefreshToken(response.data.refreshToken);
 
 
-          localStorage.setItem('accessToken', accessToken);
-          localStorage.setItem('refreshToken', refreshToken);
+          localStorage.setItem('accessToken', response.data.accessToken);
+          localStorage.setItem('refreshToken', response.data.refreshToken);
         } else {
           toast.error(response.data.message)
         }
@@ -42,8 +42,10 @@ function Login() {
 
         if (response.data.success) {
           toast.success("Login Successful");
-          setRefreshToken(response.data.refreshToken);
+          // setRefreshToken(response.data.refreshToken);
           setAccessToken(response.data.accessToken);
+
+          localStorage.setItem('accessToken', response.data.accessToken)
         } else {
           toast.error(response.data.message);
         }
