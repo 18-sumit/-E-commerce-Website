@@ -76,6 +76,10 @@ const ShopContextWrapper = (props) => {
     const updateQuantity = async (itemId, size, quantity) => {
         let cartData = structuredClone(cartItems);
 
+        if (!cartData[itemId]) {
+            cartData[itemId] = {}
+        }
+
         cartData[itemId][size] = quantity;
 
         setCartItems(cartData);
@@ -84,7 +88,7 @@ const ShopContextWrapper = (props) => {
 
             try {
 
-                await axios.post(`${backendURL}/api/cart/update`, { itemId, size ,quantity }, { headers: { accessToken } })
+                await axios.post(`${backendURL}/api/cart/update`, { itemId, size, quantity }, { headers: { accessToken } })
 
             } catch (error) {
                 console.log(error);
@@ -122,7 +126,7 @@ const ShopContextWrapper = (props) => {
         try {
 
             const response = await axios.get(`${backendURL}/api/product/list`);
-            console.log(response.data);
+            // console.log(response.data);
             if (response.data.success) {
                 setProducts(response.data.products);
             } else {
