@@ -84,9 +84,17 @@ function PlaceOrder() {
                     toast.error(error.message);
                 }
             }
-            // else {
+            else {
 
-            // }
+                const responseStripe = await axios.post(`${backendURL}/api/order/stripe`, orderData, { headers: { accesstoken: accessToken } })
+                if (responseStripe.data.success) {
+                    const {session_url} = responseStripe.data
+                    window.location.replace(session_url)
+                } else {
+                    console.log(responseStripe.data.message)
+                    toast.error(responseStripe.data.message)
+                }
+            }
 
         } catch (error) {
             console.log(error);
