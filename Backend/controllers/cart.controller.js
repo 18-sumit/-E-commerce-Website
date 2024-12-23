@@ -74,6 +74,10 @@ const updateCart = async (req, res) => {
         const userData = await User.findById(userId);
         let cartData = await userData.cartData || {}
 
+        // if (!cartData[itemId]) {
+        //     cartData[itemId] = {};  // Initialize item if not exists
+        // }
+
         cartData[itemId][size] = quantity
 
         await User.findByIdAndUpdate(userId, { cartData }, { new: true });
@@ -117,6 +121,9 @@ const getUserCart = async (req, res) => {
         }
 
         let cartData = await userData.cartData || {}
+
+        
+
 
         res.json({
             success: true,
