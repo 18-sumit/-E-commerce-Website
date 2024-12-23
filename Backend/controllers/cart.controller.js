@@ -72,11 +72,11 @@ const updateCart = async (req, res) => {
         const { userId, itemId, size, quantity } = req.body
 
         const userData = await User.findById(userId);
-        let cartData = await userData.cartData || {}
+        let cartData =  userData.cartData || {}
 
-        // if (!cartData[itemId]) {
-        //     cartData[itemId] = {};  // Initialize item if not exists
-        // }
+        if (!cartData[itemId]) {
+            cartData[itemId] = {};  // Initialize item if not exists
+        }
 
         cartData[itemId][size] = quantity
 
