@@ -64,12 +64,50 @@ const placeOrderRazorPay = async (req, res) => {
 
 // All orders data for Admin Panel 
 const allOrders = async (req, res) => {
+    try {
 
+        const orders = await Order.find({});
+        res.json({
+            success: true,
+            orders
+        })
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: message.error || 'Server error. Could not display all orders on admin panel.'
+        });
+    }
 }
 
 // User Order data for Frontend 
 const userOrders = async (req, res) => {
-    
+    try {
+
+        const { userId } = req.body;
+
+        const orders = await Order.find({ userId });
+
+        if (orders.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'No orders found for this user.'
+            });
+        }
+
+        res.json({
+            success: true,
+            orders
+        })
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: message.error || 'Server error. Could not display order details.'
+        });
+    }
 }
 
 // Update order status from Admin Panel
