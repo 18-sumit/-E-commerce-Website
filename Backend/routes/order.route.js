@@ -1,9 +1,9 @@
-import { Router } from 'express'
+import express, { Router } from 'express'
 import { placeOrderCod, placeOrderRazorPay, placeOrderStripe, allOrders, userOrders, updateOrderStatus } from '../controllers/order.controller.js'
 import adminAuth from '../middleware/adminAuth.middleware.js'
 import authUser from '../middleware/authUser.middleware.js'
 
-const orderRouter = Router.express()
+const orderRouter = express.Router()
 
 // Admin Features
 orderRouter.post('/list', adminAuth, allOrders)
