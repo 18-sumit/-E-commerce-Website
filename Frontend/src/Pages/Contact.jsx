@@ -5,8 +5,8 @@ import NewsLetterBox from "../components/NewsLetterBox"
 function Contact() {
   return (
     <div>
-      <div className='text-center text-2x1 pt-10 border-t'>
-        <Title text1={'CONTACT'} text2={'US'} />
+      <div className='text-2xl text-center pt-10 border-t'>
+        <Title text1={'CONTACT'} text2={'US'} /> 
       </div>
 
       <div className='my-10 flex justify-center md: flex-row gap-10 mb-28'>
