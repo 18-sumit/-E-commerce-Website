@@ -1,6 +1,7 @@
 import { Order } from '../models/order.models.js'
 import { User } from '../models/user.models.js'
 
+
 // Place order using COD method 
 const placeOrderCod = async (req, res) => {
 
@@ -112,7 +113,24 @@ const userOrders = async (req, res) => {
 
 // Update order status from Admin Panel
 const updateOrderStatus = async (req, res) => {
+    try {
 
+        const { orderId, status } = req.body
+
+        await Order.findByIdAndUpdate(orderId, { status })
+
+        res.json({
+            success: true,
+            message: "Status Updated"
+        })
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: message.error
+        });
+    }
 }
 
 
