@@ -152,7 +152,8 @@ const loginUser = async (req, res) => {
         // Set cookie options for secure cookies
         const cookieOptions = {
             httpOnly: true, // Prevents JavaScript from accessing the cookies
-            secure: process.env.NODE_ENV === 'development' // Set to true in production (HTTPS)
+            secure : true
+            // secure: process.env.NODE_ENV === 'development' // Set to true in production (HTTPS)
         };
 
         // Send response with cookies and user data
