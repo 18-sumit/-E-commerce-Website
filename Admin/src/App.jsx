@@ -3,10 +3,10 @@ import React, { useEffect, useState } from 'react'
 import AdminNavbar from './components/AdminNavbar'
 import Sidebar from './components/Sidebar'
 import { Routes, Route } from 'react-router-dom'
-import AddProduct from "./pages/AddProduct"
-import ListProduct from "./pages/ListProduct"
+import AddProduct from './pages/AddProduct'
+import ListProduct from './pages/ListProduct'
 import Orders from "./pages/Orders"
-import Login from './components/login'
+import Login from './components/Login'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -26,7 +26,7 @@ const App = () => {
 
   return (
     <div className='bg-gray-50 min-h-screen'>
-      
+
       <ToastContainer />
       {
         // settoken func.. is passed as a prop which is then destructured in Login.jsx for setting it's value.
