@@ -174,7 +174,7 @@ const allOrders = async (req, res) => {
         console.error(error);
         res.status(500).json({
             success: false,
-            message: message.error || 'Server error. Could not display all orders on admin panel.'
+            message: error.message || 'Server error. Could not display all orders on admin panel.'
         });
     }
 }
