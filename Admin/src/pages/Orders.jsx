@@ -36,7 +36,7 @@ const Orders = ({ token }) => {
 
         }
     }
-
+// to handle order status :
     const statusHandler = async (event, orderId) => {
 
         try {
