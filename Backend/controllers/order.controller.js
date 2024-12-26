@@ -243,7 +243,7 @@ const updateOrderStatus = async (req, res) => {
         console.error(error);
         res.status(500).json({
             success: false,
-            message: message.error
+            message: error.message
         });
     }
 }
