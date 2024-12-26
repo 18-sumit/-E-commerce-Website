@@ -128,10 +128,23 @@ const verifyStripe = async (req, res) => {
 
     const { orderId, success, userId } = req.body
 
+
     try {
+        // console.log("Verifying payment for orderId:", orderId);
+        // console.log("Payment success:", success);
+        // console.log("User ID to update:", userId);
 
         if (success === 'true') {
             await Order.findByIdAndUpdate(orderId, { payment: true })
+
+            // Update the user's cartData
+            const UpdateCartResult = await User.findByIdAndUpdate(userId, { cartData: {} });
+            console.log("Updated cart result:",UpdateCartResult)
+
+            // check if update failed:
+            if (!UpdateCartResult) {
+                throw new Error("Failed to clear user's cartData");
+            }
             await User.findByIdAndUpdate(userId, { cartData: {} })
 
             res.json({
@@ -139,7 +152,7 @@ const verifyStripe = async (req, res) => {
 
             })
         } else {
-
+            // If payment failed, delete the order
             await Order.findByIdAndDelete(orderId)
             res.json({
                 success: false,
@@ -149,6 +162,11 @@ const verifyStripe = async (req, res) => {
 
 
     } catch (error) {
+        console.error("Error during Stripe verification:", error);
+        res.status(500).json({
+            success: false,
+            message: error.message || "Internal Server Error",
+        });
 
     }
 }
