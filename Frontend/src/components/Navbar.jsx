@@ -3,8 +3,13 @@ import { useContext, useState } from "react";
 import { assets } from "../assets/assets.js";
 import { Link, NavLink } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext.jsx";
+import { useLocation } from 'react-router-dom';
+
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
+  const location = useLocation(); // Get the current location
+  // Check if the current path is "/collection"
+  const isCollectionPage = location.pathname === '/collection';
 
   const { setShowSearch, getCartCount, navigate, accessToken, setAccessToken, setCartItems } = useContext(ShopContext);
 
@@ -42,8 +47,18 @@ const Navbar = () => {
       </ul>
       {/* Right corner side of navbar */}
       <div className="flex items-center gap-6">
-        <img onClick={() => setShowSearch(true)} src={assets.search_icon} className="w-5 cursor-pointer" alt="" />
 
+        <div>
+          {/* Conditionally render the icon based on the path */}
+          {isCollectionPage && (
+            <img
+              onClick={() => setShowSearch(true)}
+              src={assets.search_icon}
+              className="w-5 cursor-pointer"
+              alt="Search Icon"
+            />
+          )}
+        </div>
         <div className="group relative">
 
           <img
